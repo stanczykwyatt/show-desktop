@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Show Desktop for Mac: hide all windows with one click (like Windows+D)</title>
+  <meta name="description" content="Show Desktop is a free, open-source Mac app. Click its menu bar icon or press Control-Shift-D to hide every window and see your Desktop, then click again to bring them all back exactly as they were. No internet access.">
+  <meta name="keywords" content="show desktop mac, hide all windows mac, minimize all windows mac, windows+d mac, clear desktop mac, menu bar app">
+  <link rel="canonical" href="https://stanczykwyatt.github.io/show-desktop/">
+  <link rel="icon" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <meta name="theme-color" content="#0d0f12">
+  <meta name="color-scheme" content="dark">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Show Desktop">
+  <meta property="og:title" content="Show Desktop for Mac">
+  <meta property="og:description" content="Hide every window with one click or Control-Shift-D. Bring them all back with another. Free, open source, no internet access.">
+  <meta property="og:url" content="https://stanczykwyatt.github.io/show-desktop/">
+  <meta property="og:image" content="https://stanczykwyatt.github.io/show-desktop/social.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="Show Desktop: hide every window with one click. Bring them all back with another.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Show Desktop",
+    "alternateName": "Show Desktop for Mac",
+    "description": "Hide every window on your Mac with one click or Control-Shift-D, then bring them all back exactly as they were.",
+    "operatingSystem": "macOS 14 or later",
+    "applicationCategory": "UtilitiesApplication",
+    "url": "https://stanczykwyatt.github.io/show-desktop/",
+    "downloadUrl": "https://github.com/stanczykwyatt/show-desktop/releases/latest/download/Show-Desktop.zip",
+    "softwareVersion": "0.1.0",
+    "image": "https://stanczykwyatt.github.io/show-desktop/icon.png",
+    "screenshot": "https://stanczykwyatt.github.io/show-desktop/demo.gif",
+    "license": "https://opensource.org/licenses/MIT",
+    "isAccessibleForFree": true,
+    "author": { "@type": "Person", "name": "Wyatt Stanczyk", "url": "https://wyattstanczyk.com" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I show the desktop on a Mac?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Install Show Desktop and click its icon in the menu bar, or press Control-Shift-D. Every window is hidden and your Desktop is showing. Click again to bring everything back. macOS also has a built-in Show Desktop on F11 (fn-F11 on most MacBooks), which pushes windows to the edges of the screen instead." }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the Mac equivalent of Windows+D?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Show Desktop works like Windows+D: press Control-Shift-D to hide every window, and press it again to put them all back." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I hide all windows on a Mac at once?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Option-Command-H hides every app except the one in front. Show Desktop hides all of them, including the one in front and Finder's windows, with one click or Control-Shift-D, and remembers what to bring back." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Show Desktop close or quit my apps?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Apps are hidden, the same as pressing Command-H, and keep running with all their windows and unsaved work." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Show Desktop safe?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Show Desktop runs in the macOS App Sandbox with no network or file access, so it can't connect to the internet or open your files. It never sees your windows' contents or your keystrokes, and the code is open source." }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --gap: clamp(12px, 4.5vmin, 72px);
+      --inset: clamp(6px, 1.1vmin, 12px);
+      --radius: clamp(22px, 3.4vmin, 38px);
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: #0d0f12;
+      color: #fff;
+      font: 16px/1.5 var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 6px; }
+
+    /* Cool silver light behind the glass, with a faint lattice. */
+    .scene {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(40% 36% at 16% 20%, rgba(214, 226, 242, 0.62), transparent 70%),
+        radial-gradient(36% 34% at 86% 24%, rgba(150, 174, 206, 0.52), transparent 72%),
+        radial-gradient(44% 40% at 70% 88%, rgba(190, 206, 228, 0.46), transparent 70%),
+        radial-gradient(30% 28% at 24% 84%, rgba(112, 134, 166, 0.42), transparent 70%),
+        linear-gradient(180deg, #141820, #0d0f12);
+    }
+    .scene::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 56px 56px;
+      -webkit-mask-image: radial-gradient(ellipse at center, #000 20%, transparent 78%);
+      mask-image: radial-gradient(ellipse at center, #000 20%, transparent 78%);
+    }
+
+    .glass {
+      position: fixed;
+      inset: var(--gap);
+      border-radius: var(--radius);
+      background: rgba(16, 19, 24, 0.46);
+      -webkit-backdrop-filter: blur(28px) saturate(140%);
+      backdrop-filter: blur(28px) saturate(140%);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+    .edge {
+      position: absolute;
+      inset: var(--inset);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: calc(var(--radius) - var(--inset));
+      pointer-events: none;
+    }
+    .content {
+      position: absolute;
+      inset: var(--inset);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: clamp(16px, 3vmin, 30px) clamp(18px, 4vmin, 40px);
+      scrollbar-width: thin;
+    }
+
+    .label {
+      font: 12px/1.4 var(--mono);
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.55);
+      text-decoration: none;
+    }
+    a.label:hover { color: #fff; }
+    .bar { display: flex; justify-content: space-between; }
+
+    .center {
+      min-height: calc(100% - 40px);
+      padding: clamp(10px, 3vh, 28px) 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .title { display: flex; flex-direction: column; align-items: center; margin-bottom: 8px; }
+    .icon { width: clamp(56px, 9vh, 76px); height: auto; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45)); }
+    h1 {
+      margin: clamp(10px, 2vh, 18px) 0 0;
+      font-size: clamp(40px, min(7.5vw, 9vh), 76px);
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -0.035em;
+    }
+    .lede { margin: 0 0 clamp(16px, 3.4vh, 28px); font-size: clamp(17px, 2.2vw, 20px); color: rgba(255, 255, 255, 0.72); }
+    kbd {
+      font: 600 0.92em var(--sans);
+      padding: 1px 7px 2px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-bottom-width: 2px;
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+    }
+
+    /* A looping demo: press the shortcut, the windows get out of the way, then come back. Without
+       JavaScript, or with reduced motion, it shows the windows in place. */
+    .demo {
+      display: grid;
+      justify-items: center;
+      gap: clamp(10px, 1.8vh, 16px);
+      margin-bottom: clamp(18px, 3.6vh, 30px);
+    }
+    .desk {
+      position: relative;
+      width: min(440px, 82vw);
+      aspect-ratio: 16 / 10;
+      max-height: 30vh;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 16px;
+      background:
+        radial-gradient(60% 60% at 20% 30%, rgba(214, 226, 242, 0.22), transparent 70%),
+        radial-gradient(50% 50% at 85% 80%, rgba(150, 174, 206, 0.2), transparent 70%),
+        rgba(255, 255, 255, 0.04);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+    }
+    .desk .menubar {
+      position: absolute;
+      inset: 0 0 auto;
+      height: 18px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 9px;
+      padding: 0 10px;
+      background: rgba(0, 0, 0, 0.35);
+    }
+    .menubar i { width: 10px; height: 6px; border-radius: 2px; background: rgba(255, 255, 255, 0.35); }
+    .menubar svg { width: 13px; height: 13px; border-radius: 4px; transition: background-color 0.12s; }
+    .is-pressed .menubar svg { background: rgba(255, 255, 255, 0.3); }
+    .folders { position: absolute; top: 30px; right: 14px; display: grid; gap: 10px; }
+    .folders svg { width: 26px; height: 22px; display: block; }
+    .win {
+      position: absolute;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 9px;
+      background: #262a31;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+      transition: opacity 0.35s ease-in, transform 0.4s ease-in;
+      transition-delay: calc(var(--i) * 70ms);
+    }
+    .win::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 9px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ff5f57;
+      box-shadow: 11px 0 #febc2e, 22px 0 #28c840;
+    }
+    .win::after {
+      content: "";
+      position: absolute;
+      inset: 26px 12px 12px;
+      background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0 5px, transparent 5px 13px);
+      -webkit-mask-image: linear-gradient(90deg, #000 60%, transparent 85%);
+      mask-image: linear-gradient(90deg, #000 60%, transparent 85%);
+    }
+    .w1 { left: 7%; top: 18%; width: 46%; height: 52%; }
+    .w2 { left: 34%; top: 32%; width: 48%; height: 54%; }
+    .w3 { left: 16%; top: 48%; width: 40%; height: 44%; }
+    .is-clear .win {
+      opacity: 0;
+      transform: scale(0.92) translateY(6px);
+    }
+    .is-back .win {
+      transition: opacity 0.35s ease-out, transform 0.45s cubic-bezier(0.2, 1.2, 0.4, 1);
+      transition-delay: calc((2 - var(--i)) * 70ms);
+    }
+
+    /* What's being pressed. */
+    .steps { display: grid; height: 26px; }
+    .step {
+      grid-area: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font: 12px/1 var(--mono);
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.55);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.3s, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .step span { margin-left: 5px; }
+    .demo[data-step="hide"] .step-hide,
+    .demo[data-step="back"] .step-back { opacity: 1; transform: none; }
+    .step kbd {
+      display: inline-grid;
+      place-items: center;
+      min-width: 24px;
+      height: 24px;
+      padding: 0 6px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 6px;
+      font: 600 13px var(--sans);
+      letter-spacing: 0;
+      box-shadow: 0 2px 0 rgba(255, 255, 255, 0.14);
+      transition: transform 0.12s, box-shadow 0.2s, background-color 0.12s, border-color 0.12s, color 0.12s;
+    }
+    .is-pressed .step kbd {
+      transform: translateY(2px);
+      border-color: #fff;
+      background: #fff;
+      color: #0d0f12;
+      box-shadow: 0 0 0 rgba(255, 255, 255, 0.14), 0 0 18px rgba(255, 255, 255, 0.35);
+    }
+    .is-pressed .step kbd:nth-child(2) { transition-delay: 0.05s; }
+    .is-pressed .step kbd:nth-child(3) { transition-delay: 0.1s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .demo *, .demo *::before, .demo *::after { transition: none !important; animation: none !important; }
+    }
+
+    .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 16px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 11px 22px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: border-color 0.15s, background-color 0.15s;
+    }
+    .button:hover { border-color: rgba(255, 255, 255, 0.6); }
+    .button .star { width: 15px; height: 15px; fill: #fff; }
+    .button.solid { border-color: #fff; background: #fff; color: #0d0f12; }
+    .button.solid:hover { background: rgba(255, 255, 255, 0.86); }
+
+    .thanks { margin: 0 0 14px; font-size: 14px; color: rgba(255, 255, 255, 0.75); animation: drop 0.4s ease-out both; }
+    @keyframes drop {
+      from { opacity: 0; transform: translateY(-12px); }
+      to { opacity: 1; transform: none; }
+    }
+    .more { margin-top: 10px; }
+
+    /* Questions people search for, below the fold. */
+    .faq {
+      width: min(680px, 100%);
+      margin: clamp(20px, 5vh, 48px) auto clamp(16px, 3vh, 28px);
+      display: grid;
+      gap: 10px;
+    }
+    .faq h2 { margin: 0 0 6px; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; text-align: center; }
+    .faq details {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 12px 16px;
+    }
+    .faq summary { cursor: pointer; font-weight: 600; }
+    .faq p { margin: 8px 0 0; color: rgba(255, 255, 255, 0.72); font-size: 15px; }
+
+    .foot { display: grid; gap: 4px; text-align: center; }
+    .foot p { margin: 0; font: 11px/1.6 var(--mono); letter-spacing: 0.03em; color: rgba(255, 255, 255, 0.4); }
+    .foot a { color: rgba(255, 255, 255, 0.7); }
+
+    /* On shorter screens the icon moves beside the name, so the top section still fits. */
+    @media (max-height: 760px), (max-width: 480px) {
+      .title { flex-direction: row; gap: clamp(10px, 1.6vh, 16px); margin-top: clamp(4px, 1vh, 10px); }
+      .icon { width: clamp(36px, min(6.4vw, 7.6vh), 58px); }
+      h1 { margin: 0; }
+    }
+    @media (max-height: 560px) {
+      .lede { margin-bottom: 8px; }
+      .demo { gap: 6px; margin-bottom: 8px; }
+      .steps { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scene" aria-hidden="true"></div>
+
+  <main class="glass">
+    <div class="edge" aria-hidden="true"></div>
+    <div class="content">
+      <nav class="bar" aria-label="Site">
+        <span class="label">show desktop · v0.1</span>
+        <a class="label" href="https://github.com/stanczykwyatt/show-desktop">github ↗</a>
+      </nav>
+
+      <section class="center">
+        <div class="title">
+          <img class="icon" src="icon.png" alt="" width="76" height="76">
+          <h1>Show Desktop</h1>
+        </div>
+        <p class="lede">Press <kbd>⌃⇧D</kbd> or click once. Every window gets out of the way.</p>
+
+        <div class="demo" data-step="" role="img" aria-label="Demo: pressing Control-Shift-D hides three open windows to reveal the Desktop, and pressing it again brings all three back">
+          <div class="desk" aria-hidden="true">
+            <div class="menubar">
+              <svg viewBox="0 0 16 16"><rect x="3" y="2.5" width="10" height="7.5" rx="1.6" fill="none" stroke="#fff" stroke-width="1.3"/><rect x="1.5" y="5.5" width="10" height="8" rx="1.6" fill="#1b1f26" stroke="#fff" stroke-width="1.3"/></svg>
+              <i></i><i></i><i></i>
+            </div>
+            <div class="folders">
+              <svg viewBox="0 0 26 22"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2h5l2.5 3h9.5A2.5 2.5 0 0 1 24 7.5v10a2.5 2.5 0 0 1-2.5 2.5h-17A2.5 2.5 0 0 1 2 17.5z" fill="#74b8fa"/></svg>
+              <svg viewBox="0 0 26 22"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2h5l2.5 3h9.5A2.5 2.5 0 0 1 24 7.5v10a2.5 2.5 0 0 1-2.5 2.5h-17A2.5 2.5 0 0 1 2 17.5z" fill="#74b8fa"/></svg>
+              <svg viewBox="0 0 26 22"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2h5l2.5 3h9.5A2.5 2.5 0 0 1 24 7.5v10a2.5 2.5 0 0 1-2.5 2.5h-17A2.5 2.5 0 0 1 2 17.5z" fill="#74b8fa"/></svg>
+            </div>
+            <div class="win w1" style="--i: 0"></div>
+            <div class="win w2" style="--i: 1"></div>
+            <div class="win w3" style="--i: 2"></div>
+          </div>
+          <div class="steps" aria-hidden="true">
+            <span class="step step-hide"><kbd>⌃</kbd><kbd>⇧</kbd><kbd>D</kbd><span>desktop</span></span>
+            <span class="step step-back"><kbd>⌃</kbd><kbd>⇧</kbd><kbd>D</kbd><span>windows back</span></span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="button solid" href="https://github.com/stanczykwyatt/show-desktop/releases/latest/download/Show-Desktop.zip">Download for Mac</a>
+          <a class="button" href="https://github.com/stanczykwyatt/show-desktop">
+            <svg class="star" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4l1.95 4.02 4.43.6-3.23 3.08.79 4.4L8 11.38 4.06 13.5l.79-4.4L1.62 6.02l4.43-.6z"/></svg>
+            Star on GitHub
+          </a>
+        </div>
+        <p class="thanks" id="thanks" hidden>Thanks for downloading! If Show Desktop saves you time, a <a href="https://github.com/stanczykwyatt/show-desktop">star on GitHub</a> helps other people find it.</p>
+        <p class="label">free · open source · macos 14+ · no internet access</p>
+      </section>
+
+      <section class="faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Questions</h2>
+        <details>
+          <summary>How do I show the desktop on a Mac?</summary>
+          <p>Install Show Desktop and click its icon in the menu bar, or press <kbd>⌃⇧D</kbd>. Every window is hidden and your Desktop is showing. Click again to bring everything back. macOS also has a built-in Show Desktop on F11 (fn‑F11 on most MacBooks), which pushes windows to the edges of the screen instead.</p>
+        </details>
+        <details>
+          <summary>What's the Mac equivalent of Windows+D?</summary>
+          <p>Show Desktop works like Windows+D: press <kbd>⌃⇧D</kbd> to hide every window, and press it again to put them all back.</p>
+        </details>
+        <details>
+          <summary>How do I hide all windows on a Mac at once?</summary>
+          <p><kbd>⌥⌘H</kbd> hides every app except the one in front. Show Desktop hides all of them, including the one in front and Finder's windows, and remembers exactly what to bring back.</p>
+        </details>
+        <details>
+          <summary>Does it close or quit my apps?</summary>
+          <p>No. Apps are hidden, the same as pressing <kbd>⌘H</kbd>, and keep running with all their windows and unsaved work. Apps you'd already hidden stay hidden, and the app you were using comes back in front.</p>
+        </details>
+        <details>
+          <summary>Is it safe?</summary>
+          <p>Show Desktop runs in the macOS App Sandbox with no network or file access, so it can't connect to the internet or open your files. It never sees your windows' contents or your keystrokes, and <a href="https://github.com/stanczykwyatt/show-desktop">the code is open source</a>.</p>
+        </details>
+      </section>
+
+      <footer class="foot">
+        <p>Also free: <a href="https://stanczykwyatt.github.io/copy-2fa/">Copy 2FA</a>, which copies 2FA codes from Mail and Messages with one shortcut.</p>
+        <p>Show Desktop collects no data, and this site has no cookies or tracking. MIT License. Not affiliated with Apple Inc. or Microsoft.</p>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    // After a download, ask for a star, which is when people are most glad to give one.
+    document.querySelector(".button.solid").addEventListener("click", () => {
+      document.getElementById("thanks").hidden = false;
+    });
+
+    // Plays the demo on a loop: press the shortcut, the Desktop clears, press it again, the windows return.
+    const demo = document.querySelector(".demo");
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // Each step runs this many milliseconds after the one before it.
+      const steps = [
+        [900, () => { demo.classList.remove("is-back"); demo.dataset.step = "hide"; }],
+        [700, () => demo.classList.add("is-pressed")],
+        [200, () => { demo.classList.remove("is-pressed"); demo.classList.add("is-clear"); }],
+        [1900, () => (demo.dataset.step = "back")],
+        [700, () => demo.classList.add("is-pressed")],
+        [200, () => { demo.classList.remove("is-pressed", "is-clear"); demo.classList.add("is-back"); }],
+        [1500, () => (demo.dataset.step = "")],
+      ];
+      let step = 0;
+      let timer;
+
+      function run() {
+        steps[step][1]();
+        step = (step + 1) % steps.length;
+        timer = setTimeout(run, steps[step][0]);
+      }
+
+      // Starts over when the tab comes back, rather than catching up on missed steps.
+      document.addEventListener("visibilitychange", () => {
+        clearTimeout(timer);
+        if (!document.hidden) {
+          step = 0;
+          demo.classList.remove("is-clear", "is-pressed");
+          run();
+        }
+      });
+      timer = setTimeout(run, steps[0][0]);
+    }
+  </script>
+</body>
+</html>

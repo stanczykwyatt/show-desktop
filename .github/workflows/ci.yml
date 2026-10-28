@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Run tests
+        run: swift test
+
+      - name: Build the app
+        run: scripts/build-app.sh
+
+      - name: Check the app has no network or file access
+        run: |
+          entitlements="$(codesign -d --entitlements - --xml "build/Show Desktop.app" 2>/dev/null)"
+          if grep -qE "com.apple.security.(network|files)" <<< "$entitlements"; then
+            echo "::error::Show Desktop must never have network or file entitlements."
+            exit 1
+          fi
+          if ! grep -q "com.apple.security.app-sandbox" <<< "$entitlements"; then
+            echo "::error::Show Desktop must run in the App Sandbox."
+            exit 1
+          fi
+          echo "Sandboxed, with no network or file entitlements."

@@ -1,0 +1,24 @@
+name: Bug report
+description: Something isn't working.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead? Which apps were open?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Show Desktop version
+      description: Right-click the menu bar icon → About Show Desktop.
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+    validations:
+      required: true

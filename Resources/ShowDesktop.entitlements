@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+	Everything Show Desktop is allowed to do. The App Sandbox blocks anything not listed here,
+	so with no network entitlement the app cannot connect to the internet at all, and with no file
+	entitlements it cannot open any of your files.
+-->
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<!-- Apple Events to Finder only, to minimize and restore its windows. macOS asks you first. -->
+	<key>com.apple.security.automation.apple-events</key>
+	<true/>
+	<key>com.apple.security.temporary-exception.apple-events</key>
+	<array>
+		<string>com.apple.finder</string>
+	</array>
+</dict>
+</plist>
