@@ -13,6 +13,10 @@
   <a href="https://github.com/stanczykwyatt/show-desktop/releases/latest/download/Show-Desktop.zip"><b>Download for Mac</b></a>
   &nbsp;·&nbsp;
   <a href="https://stanczykwyatt.github.io/show-desktop/">Website</a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/users/stanczykwyatt/projects/1">Roadmap</a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/stanczykwyatt/show-desktop/discussions">Discussions</a>
 </p>
 
 <p align="center">
@@ -137,7 +141,7 @@ Yes. The download runs on Apple silicon and Intel Macs with macOS 14 Sonoma or l
 
 ## Contributing
 
-Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md), and the [roadmap](https://github.com/users/stanczykwyatt/projects/1) for what's planned. Ideas go in [Discussions](https://github.com/stanczykwyatt/show-desktop/discussions/2).
 
 ## License
 
