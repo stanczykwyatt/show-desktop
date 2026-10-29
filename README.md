@@ -34,7 +34,7 @@
 
 ---
 
-Need to grab a file off your Desktop, but it's buried under a dozen windows? Minimizing them one by one is a pain, and macOS's own Show Desktop shoves everything to the edges of the screen. Show Desktop clears the whole Desktop with one click on its menu bar icon, or with **⌃⇧D** from any app. Click again and every window comes back exactly where it was, with the app you were using back in front.
+Need to grab a file off your Desktop, but it's buried under a dozen windows? Minimizing them one by one is a pain, and macOS's own Show Desktop shoves everything to the edges of the screen. Show Desktop clears the whole Desktop with one click on its menu bar icon, or with **⌃⇧D** (or any shortcut you choose) from any app. Click again and every window comes back exactly where it was, with the app you were using back in front.
 
 It's tiny, it has no internet access, and it's open source, so anyone can check what it does.
 
@@ -46,7 +46,7 @@ If Show Desktop saves you time, [starring the repo](https://github.com/stanczykw
 - **Puts everything back exactly as it was.** The second click brings back only the apps that were open, in the same order, with the one you were using on top. Apps you'd already hidden stay hidden.
 - **Finder windows too.** Open Finder windows are minimized along with everything else and come back with them, so only your Desktop is showing.
 - **Nothing is closed or quit.** Apps are hidden the same way as ⌘H, so nothing is lost, even if Show Desktop itself quits. Any app comes back from the Dock as usual.
-- **Your choice of shortcut:** ⌃⇧D, ⌃⌥D or ⌃⌥⌘H, or none at all. Right-click the menu bar icon to change it.
+- **Any shortcut you like.** Use ⌃⇧D, pick ⌃⌥D or ⌃⌥⌘H, or record your own, even a single function key like F13. Shortcuts that would get in the way of typing, or that macOS already uses, are refused. Right-click the menu bar icon to change it.
 - **Private by design.** No internet access, enforced by the macOS sandbox. No Accessibility or Screen Recording permission.
 - **Free and open source.** No account, no subscription, no tracking, no dependencies.
 
@@ -55,7 +55,7 @@ If Show Desktop saves you time, [starring the repo](https://github.com/stanczykw
 | | Show Desktop | macOS Show Desktop (F11, gesture or hot corner) | Minimizing each window |
 |---|:---:|:---:|:---:|
 | One click from the menu bar | ✅ | — | — |
-| Keyboard shortcut without the fn key | ✅ ⌃⇧D | Needs F11 or fn‑F11 | ⌘M, one window at a time |
+| Keyboard shortcut without the fn key | ✅ ⌃⇧D, or record your own | Needs F11 or fn‑F11 | ⌘M, one window at a time |
 | Windows fully out of the way | ✅ Hidden | Pushed to the screen edges | ✅ In the Dock |
 | Brings back exactly what was open | ✅ | ✅ | One at a time |
 | App you were using back in front | ✅ | ✅ | — |
@@ -92,7 +92,9 @@ open "build/Show Desktop.app"
 |---|---|
 | Show the Desktop | Click the menu bar icon, or press ⌃⇧D |
 | Bring every window back | Click the icon again, or press ⌃⇧D again |
-| Change or turn off the shortcut | Right-click the icon → Keyboard Shortcut |
+| Pick a different shortcut | Right-click the icon → Keyboard Shortcut |
+| Record your own shortcut | Right-click the icon → Keyboard Shortcut → Record Shortcut…, then press the keys |
+| Turn off the shortcut | Right-click the icon → Keyboard Shortcut → None |
 | Leave Finder windows alone | Right-click the icon → turn off Also Minimize Finder Windows |
 | Stop it opening at login | Right-click the icon → turn off Open at Login |
 
@@ -106,7 +108,7 @@ Show Desktop is built so it *can't* misuse your data, not just so it promises no
 - **No access to your files.** It has no file entitlements at all, so the sandbox blocks it from opening any of your documents.
 - **Can only talk to Finder.** Its one Apple Events entitlement is for Finder, used only to minimize and restore Finder windows, and macOS asks you first. Turn the option off and it never sends one.
 - **Never sees what's in your windows.** It asks macOS which app owns each window, so it can restore them in order. Without Screen Recording permission, which it never asks for, macOS doesn't give it window titles or contents.
-- **Never sees what you type.** The shortcut uses the Carbon hot key API, which only reports that one shortcut. No Accessibility or Input Monitoring permission is needed.
+- **Never sees what you type.** The shortcut uses the Carbon hot key API, which only reports that one shortcut. Recording a new shortcut only reads the keys you press in Show Desktop's own Keyboard Shortcut window. No Accessibility or Input Monitoring permission is needed.
 - **Saves nothing but its settings:** the shortcut you picked and whether to minimize Finder windows.
 - **No dependencies.** Every line that runs is in this repository.
 
@@ -120,11 +122,17 @@ Install Show Desktop and click its icon in the menu bar, or press ⌃⇧D. Every
 **What's the Mac equivalent of Windows+D?**
 Show Desktop works like Windows+D: press ⌃⇧D to hide every window, and press it again to put them all back.
 
+**How do I change the Show Desktop shortcut?**
+Right-click the menu bar icon and choose **Keyboard Shortcut → Record Shortcut…**, then press the keys you want. Any combination with ⌃, or ⌘ with ⇧ or ⌥, works, and so does a function key like F13 on its own. Show Desktop won't take shortcuts that would get in the way of typing, like ⌥E, or that macOS already uses, like ⇧⌘3 for screenshots.
+
 **How do I hide all windows on a Mac at once?**
 ⌥⌘H hides every app except the one in front. Show Desktop hides all of them, including the one in front and Finder's windows, with one click or ⌃⇧D, and remembers what to bring back.
 
 **Does it close or quit my apps?**
 No. Apps are hidden, the same as pressing ⌘H, and keep running with all their windows and unsaved work.
+
+**What if another app uses the same shortcut?**
+macOS lets more than one app listen for the same shortcut, and it usually doesn't say when two clash. If pressing your shortcut does something else too, record a different one. When macOS does report that another app has it, Show Desktop says so in its Keyboard Shortcut menu.
 
 **What if I open another app while the Desktop is showing?**
 That's fine. The next click brings back everything that was open before, and the app you opened stays open.

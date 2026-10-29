@@ -12,7 +12,7 @@ scripts/build-app.sh      # build "Show Desktop.app" into ./build
 open "build/Show Desktop.app"
 ```
 
-The logic that decides what to hide and what to bring back lives in `Sources/ShowDesktopCore`, with tests in `Tests/ShowDesktopCoreTests`. The menu bar app, shortcut and Finder scripts are in `Sources/ShowDesktop`.
+The logic that decides what to hide and what to bring back, and which shortcuts can be recorded, lives in `Sources/ShowDesktopCore`, with tests in `Tests/ShowDesktopCoreTests`. The menu bar app, shortcut and Finder scripts are in `Sources/ShowDesktop`.
 
 ## Ground rules
 

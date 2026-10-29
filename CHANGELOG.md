@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0 (2026-10-28)
+
+- **Record your own shortcut:** right-click the menu bar icon and choose Keyboard Shortcut → Record Shortcut… to use any combination with ⌃, or ⌘ with ⇧ or ⌥. Function keys like F13 work on their own. Shortcuts that would get in the way of typing (like ⌥E, which types an accent) or that macOS already uses (like ⇧⌘3 for screenshots) are refused, so a shortcut can't break something you rely on.
+- **Clashes:** when macOS reports that another app already has your shortcut, the Keyboard Shortcut menu says so.
+- **Function keys and arrows** show up next to Show Desktop in the menu, like any other shortcut.
+- The shortcut you picked in 0.1.0 carries over.
+
 ## 0.1.0 (2026-10-28)
 
 First release.
