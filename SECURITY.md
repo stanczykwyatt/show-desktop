@@ -20,7 +20,7 @@ Please report security problems privately through **Security → Report a vulner
 - **The internet.** The app runs in the App Sandbox without a network entitlement, so macOS blocks every connection. CI checks every build for this.
 - **Your files.** It has no file entitlements, so the sandbox blocks every document, download and folder.
 - **Other apps' data.** Its only Apple Events entitlement is for Finder, and the scripts it sends only change whether Finder windows are minimized.
-- **Your keystrokes.** The shortcut uses the Carbon hot key API, which only reports that one shortcut. No Accessibility or Input Monitoring permission is needed.
+- **Your keystrokes.** The shortcut uses the Carbon hot key API, which only reports that one shortcut. When you record a new shortcut, Show Desktop reads only the keys you press while its own Keyboard Shortcut window is in front. No Accessibility or Input Monitoring permission is needed.
 - **Your screen.** It never requests Screen Recording permission and never captures the screen.
 
 Check it yourself on any copy of the app:

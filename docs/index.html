@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Show Desktop for Mac: hide all windows with one click (like Windows+D)</title>
-  <meta name="description" content="Show Desktop is a free, open-source Mac app. Click its menu bar icon or press Control-Shift-D to hide every window and see your Desktop, then click again to bring them all back exactly as they were. No internet access.">
-  <meta name="keywords" content="show desktop mac, hide all windows mac, minimize all windows mac, windows+d mac, clear desktop mac, menu bar app">
+  <meta name="description" content="Show Desktop is a free, open-source Mac app. Click its menu bar icon, or press Control-Shift-D or any shortcut you choose, to hide every window and see your Desktop. Click again to bring them all back. No internet access.">
+  <meta name="keywords" content="show desktop mac, show desktop shortcut mac, hide all windows mac, minimize all windows mac, windows+d mac, clear desktop mac, custom keyboard shortcut, menu bar app">
   <link rel="canonical" href="https://stanczykwyatt.github.io/show-desktop/">
   <link rel="icon" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Show Desktop">
   <meta property="og:title" content="Show Desktop for Mac">
-  <meta property="og:description" content="Hide every window with one click or Control-Shift-D. Bring them all back with another. Free, open source, no internet access.">
+  <meta property="og:description" content="Hide every window with one click, Control-Shift-D or any shortcut you choose. Bring them all back with another. Free, open source, no internet access.">
   <meta property="og:url" content="https://stanczykwyatt.github.io/show-desktop/">
   <meta property="og:image" content="https://stanczykwyatt.github.io/show-desktop/social.png">
   <meta property="og:image:width" content="1280">
@@ -29,12 +29,23 @@
     "@type": "SoftwareApplication",
     "name": "Show Desktop",
     "alternateName": "Show Desktop for Mac",
-    "description": "Hide every window on your Mac with one click or Control-Shift-D, then bring them all back exactly as they were.",
+    "description": "Hide every window on your Mac with one click, Control-Shift-D or any keyboard shortcut you choose, then bring them all back exactly as they were.",
     "operatingSystem": "macOS 14 or later",
     "applicationCategory": "UtilitiesApplication",
     "url": "https://stanczykwyatt.github.io/show-desktop/",
     "downloadUrl": "https://github.com/stanczykwyatt/show-desktop/releases/latest/download/Show-Desktop.zip",
-    "softwareVersion": "0.1.0",
+    "softwareVersion": "0.2.0",
+    "datePublished": "2026-10-28",
+    "dateModified": "2026-10-28",
+    "releaseNotes": "https://github.com/stanczykwyatt/show-desktop/releases/tag/v0.2.0",
+    "featureList": [
+      "Hide every window with one click on the menu bar icon",
+      "Keyboard shortcut from any app: Control-Shift-D, or record your own",
+      "Brings back exactly the windows that were open, in the same order",
+      "Minimizes and restores Finder windows too",
+      "No internet access, enforced by the macOS App Sandbox",
+      "No Accessibility or Screen Recording permission"
+    ],
     "image": "https://stanczykwyatt.github.io/show-desktop/icon.png",
     "screenshot": "https://stanczykwyatt.github.io/show-desktop/demo.gif",
     "license": "https://opensource.org/licenses/MIT",
@@ -57,6 +68,11 @@
         "@type": "Question",
         "name": "What's the Mac equivalent of Windows+D?",
         "acceptedAnswer": { "@type": "Answer", "text": "Show Desktop works like Windows+D: press Control-Shift-D to hide every window, and press it again to put them all back." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I change the Show Desktop keyboard shortcut?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Right-click the Show Desktop icon in the menu bar, choose Keyboard Shortcut, then Record Shortcut, and press the keys you want. Any combination with Control, or Command with Shift or Option, works, and so does a function key like F13 on its own. Show Desktop won't take shortcuts that would get in the way of typing or that macOS already uses, like Command-Shift-3 for screenshots." }
       },
       {
         "@type": "Question",
@@ -153,7 +169,10 @@
       text-decoration: none;
     }
     a.label:hover { color: #fff; }
-    .bar { display: flex; justify-content: space-between; }
+    .bar { display: flex; justify-content: space-between; gap: 12px; }
+    @media (max-width: 400px) {
+      .bar .new { display: none; }
+    }
 
     .center {
       min-height: calc(100% - 40px);
@@ -373,7 +392,7 @@
     <div class="edge" aria-hidden="true"></div>
     <div class="content">
       <nav class="bar" aria-label="Site">
-        <span class="label">show desktop · v0.1</span>
+        <a class="label" href="https://github.com/stanczykwyatt/show-desktop/releases/tag/v0.2.0">show desktop · v0.2<span class="new"> · what's new</span></a>
         <a class="label" href="https://github.com/stanczykwyatt/show-desktop">github ↗</a>
       </nav>
 
@@ -425,6 +444,10 @@
         <details>
           <summary>What's the Mac equivalent of Windows+D?</summary>
           <p>Show Desktop works like Windows+D: press <kbd>⌃⇧D</kbd> to hide every window, and press it again to put them all back.</p>
+        </details>
+        <details>
+          <summary>How do I change the shortcut?</summary>
+          <p>Right-click the menu bar icon and choose Keyboard Shortcut → Record Shortcut, then press the keys you want. Any combination with <kbd>⌃</kbd>, or <kbd>⌘</kbd> with <kbd>⇧</kbd> or <kbd>⌥</kbd>, works, and so does a function key like <kbd>F13</kbd> on its own. Show Desktop won't take shortcuts that would get in the way of typing or that macOS already uses, like <kbd>⇧⌘3</kbd> for screenshots.</p>
         </details>
         <details>
           <summary>How do I hide all windows on a Mac at once?</summary>

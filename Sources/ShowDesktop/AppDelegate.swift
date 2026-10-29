@@ -1,27 +1,28 @@
 import AppKit
 import ServiceManagement
+import ShowDesktopCore
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let controller = DesktopController()
     private let hotKey = HotKey()
+    private let recorder = ShortcutRecorder()
+    private let shortcutStore = ShortcutStore()
+    /// Whether another app already had the shortcut when Show Desktop tried to use it.
+    private var shortcutIsTaken = false
     private let defaults = UserDefaults.standard
     private var statusItem: NSStatusItem!
     private let menu = NSMenu()
 
     private enum Key {
-        static let shortcut = "shortcut"
         static let minimizesFinderWindows = "minimizesFinderWindows"
         static let launchedBefore = "launchedBefore"
     }
 
-    private var shortcut: Shortcut? {
-        get {
-            // A missing value means the default; an empty string means you turned the shortcut off.
-            guard let id = defaults.string(forKey: Key.shortcut) else { return .standard }
-            return Shortcut.all.first { $0.id == id }
-        }
-        set { defaults.set(newValue?.id ?? "", forKey: Key.shortcut) }
+    /// Nil when the shortcut is turned off.
+    private var shortcut: KeyShortcut? {
+        get { shortcutStore.shortcut }
+        set { shortcutStore.shortcut = newValue }
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -39,6 +40,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.delegate = self
 
         hotKey.onPress = { [weak self] in self?.toggle() }
+        recorder.onRecord = { [weak self] recorded in self?.useRecordedShortcut(recorded) ?? false }
+        recorder.onClose = { [weak self] in
+            self?.registerShortcut()
+            // Gives the keyboard back to the app you were using.
+            NSApp.hide(nil)
+        }
         registerShortcut()
 
         // Open at login by default the first time, like most menu bar utilities. You can turn it off in the menu.
@@ -58,7 +65,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     private func registerShortcut() {
         hotKey.unregister()
-        if let shortcut { hotKey.register(shortcut) }
+        shortcutIsTaken = false
+        // While recording, the current shortcut stays free so it can be typed into the recorder.
+        guard !recorder.isShown, let shortcut else { return }
+        shortcutIsTaken = !hotKey.register(shortcut)
+    }
+
+    /// Saves a recorded shortcut if it can be registered. Returns false if another app has it.
+    private func useRecordedShortcut(_ recorded: KeyShortcut) -> Bool {
+        guard hotKey.register(recorded) else { return false }
+        shortcut = recorded
+        shortcutIsTaken = false
+        return true
     }
 
     // MARK: Status item
@@ -78,24 +96,40 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()
 
+        // A shortcut another app took doesn't work, so the menu doesn't show it.
+        let equivalent = shortcutIsTaken ? nil : shortcut?.menuKeyEquivalent
         let toggleItem = NSMenuItem(
             title: controller.isShowingDesktop ? "Bring Windows Back" : "Show Desktop",
-            action: #selector(toggleFromMenu), keyEquivalent: shortcut?.key ?? ""
+            action: #selector(toggleFromMenu), keyEquivalent: equivalent?.key ?? ""
         )
-        toggleItem.keyEquivalentModifierMask = shortcut?.modifierFlags ?? []
+        toggleItem.keyEquivalentModifierMask = equivalent?.modifiers ?? []
         toggleItem.target = self
         menu.addItem(toggleItem)
         menu.addItem(.separator())
 
         let shortcuts = NSMenu()
-        for option in Shortcut.all {
-            let item = NSMenuItem(title: option.symbols, action: #selector(chooseShortcut(_:)), keyEquivalent: "")
-            item.representedObject = option.id
-            item.state = option == shortcut ? .on : .off
+        if shortcutIsTaken, let shortcut {
+            let warning = NSMenuItem(title: "Another app is using \(shortcut.displayString)", action: nil, keyEquivalent: "")
+            warning.image = NSImage(systemSymbolName: "exclamationmark.triangle", accessibilityDescription: "Warning")
+            warning.isEnabled = false
+            shortcuts.addItem(warning)
+            shortcuts.addItem(.separator())
+        }
+        var options = KeyShortcut.presets
+        if let shortcut, !options.contains(where: { $0.hasSameKeys(as: shortcut) }) {
+            options.append(shortcut)
+        }
+        for option in options {
+            let item = NSMenuItem(title: option.displayString, action: #selector(chooseShortcut(_:)), keyEquivalent: "")
+            item.representedObject = option
+            item.state = shortcut.map(option.hasSameKeys(as:)) == true ? .on : .off
             item.target = self
             shortcuts.addItem(item)
         }
         shortcuts.addItem(.separator())
+        let record = NSMenuItem(title: "Record Shortcut…", action: #selector(recordShortcut), keyEquivalent: "")
+        record.target = self
+        shortcuts.addItem(record)
         let off = NSMenuItem(title: "None", action: #selector(chooseShortcut(_:)), keyEquivalent: "")
         off.state = shortcut == nil ? .on : .off
         off.target = self
@@ -124,8 +158,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc private func toggleFromMenu() { toggle() }
 
     @objc private func chooseShortcut(_ sender: NSMenuItem) {
-        shortcut = (sender.representedObject as? String).flatMap { id in Shortcut.all.first { $0.id == id } }
+        shortcut = sender.representedObject as? KeyShortcut
         registerShortcut()
+    }
+
+    @objc private func recordShortcut() {
+        // Frees the current shortcut, so pressing it records it instead of showing the Desktop.
+        hotKey.unregister()
+        recorder.show()
     }
 
     @objc private func toggleFinderWindows() {
