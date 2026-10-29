@@ -146,6 +146,7 @@ Yes. The download runs on Apple silicon and Intel Macs with macOS 14 Sonoma or l
 ## More free Mac utilities
 
 - **[Copy 2FA](https://github.com/stanczykwyatt/copy-2fa):** copy 2FA codes from Mail, Messages or a built-in authenticator with one keyboard shortcut. Also no internet access.
+- **[Who Stole My Focus](https://github.com/stanczykwyatt/who-stole-my-focus):** find out which app keeps jumping in front of your work, even mid-typing. No permissions and no internet access.
 
 ## Contributing
 
