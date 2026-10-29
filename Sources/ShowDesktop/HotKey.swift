@@ -1,4 +1,5 @@
 import Carbon.HIToolbox
+import ShowDesktopCore
 
 /// A system-wide keyboard shortcut.
 ///
@@ -24,7 +25,7 @@ final class HotKey {
 
     /// Returns false if another app already uses the shortcut.
     @discardableResult
-    func register(_ shortcut: Shortcut) -> Bool {
+    func register(_ shortcut: KeyShortcut) -> Bool {
         unregister()
         let hotKeyID = EventHotKeyID(signature: OSType(0x5348_4454), id: 1)  // "SHDT"
         let status = RegisterEventHotKey(shortcut.keyCode, shortcut.modifiers, hotKeyID, GetApplicationEventTarget(), 0, &hotKeyRef)
