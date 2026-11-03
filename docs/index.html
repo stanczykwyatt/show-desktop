@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Show Desktop for Mac: hide all windows with one click (like Windows+D)</title>
+  <title>Show Desktop for Mac: hide all windows (like Windows+D)</title>
   <meta name="description" content="Show Desktop is a free, open-source Mac app. Click its menu bar icon, or press Control-Shift-D or any shortcut you choose, to hide every window and see your Desktop. Click again to bring them all back. No internet access.">
   <meta name="keywords" content="show desktop mac, show desktop shortcut mac, hide all windows mac, minimize all windows mac, windows+d mac, clear desktop mac, custom keyboard shortcut, menu bar app">
   <link rel="canonical" href="https://stanczykwyatt.github.io/show-desktop/">
@@ -55,43 +55,61 @@
   }
   </script>
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How do I show the desktop on a Mac?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Install Show Desktop and click its icon in the menu bar, or press Control-Shift-D. Every window is hidden and your Desktop is showing. Click again to bring everything back. macOS also has a built-in Show Desktop on F11 (fn-F11 on most MacBooks), which pushes windows to the edges of the screen instead." }
-      },
-      {
-        "@type": "Question",
-        "name": "What's the Mac equivalent of Windows+D?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Show Desktop works like Windows+D: press Control-Shift-D to hide every window, and press it again to put them all back." }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I change the Show Desktop keyboard shortcut?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Right-click the Show Desktop icon in the menu bar, choose Keyboard Shortcut, then Record Shortcut, and press the keys you want. Any combination with Control, or Command with Shift or Option, works, and so does a function key like F13 on its own. Show Desktop won't take shortcuts that would get in the way of typing or that macOS already uses, like Command-Shift-3 for screenshots." }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I hide all windows on a Mac at once?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Option-Command-H hides every app except the one in front. Show Desktop hides all of them, including the one in front and Finder's windows, with one click or Control-Shift-D, and remembers what to bring back." }
-      },
-      {
-        "@type": "Question",
-        "name": "Does Show Desktop close or quit my apps?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. Apps are hidden, the same as pressing Command-H, and keep running with all their windows and unsaved work." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is Show Desktop safe?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Show Desktop runs in the macOS App Sandbox with no network or file access, so it can't connect to the internet or open your files. It never sees your windows' contents or your keystrokes, and the code is open source." }
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I show the desktop on a Mac?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Install Show Desktop and click its icon in the menu bar, or press ⌃⇧D. Every window is hidden and your Desktop is showing. Click again to bring everything back. macOS also has a built-in Show Desktop on F11 (fn‑F11 on most MacBooks), which pushes windows to the edges of the screen instead."
       }
-    ]
-  }
-  </script>
+    },
+    {
+      "@type": "Question",
+      "name": "What's the Mac equivalent of Windows+D?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Show Desktop works like Windows+D: press ⌃⇧D to hide every window, and press it again to put them all back."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I change the shortcut?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Right-click the menu bar icon and choose Keyboard Shortcut → Record Shortcut, then press the keys you want. Any combination with ⌃, or ⌘ with ⇧ or ⌥, works, and so does a function key like F13 on its own. Show Desktop won't take shortcuts that would get in the way of typing or that macOS already uses, like ⇧⌘3 for screenshots."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I hide all windows on a Mac at once?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "⌥⌘H hides every app except the one in front. Show Desktop hides all of them, including the one in front and Finder's windows, and remembers exactly what to bring back."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it close or quit my apps?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Apps are hidden, the same as pressing ⌘H, and keep running with all their windows and unsaved work. Apps you'd already hidden stay hidden, and the app you were using comes back in front."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it safe?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Show Desktop runs in the macOS App Sandbox with no network or file access, so it can't connect to the internet or open your files. It never sees your windows' contents or your keystrokes, and the code is open source."
+      }
+    }
+  ]
+}
+</script>
 
   <style>
     :root {
