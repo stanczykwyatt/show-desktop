@@ -150,6 +150,17 @@ Yes. The download runs on Apple silicon and Intel Macs with macOS 14 Sonoma or l
 - **[AI Footprint](https://github.com/stanczykwyatt/ai-footprint):** see what AI coding tools leave on your Mac, and what each update changed. Read-only, no internet access.
 - **[mulligan](https://github.com/stanczykwyatt/mulligan):** undo for coding agents: snapshots at every prompt and tool call, so you can go back to any point. A command line tool for macOS and Linux, no internet access.
 - **[symbolhop](https://github.com/stanczykwyatt/symbolhop):** go-to-definition and find-references for coding agents, from your language servers. No internet access.
+- **[Memo Export](https://github.com/stanczykwyatt/memo-export):** export your Voice Memos transcripts as Markdown, with the audio. No internet access.
+- **[Podcast Export](https://github.com/stanczykwyatt/podcast-export):** export your Apple Podcasts shows as OPML, and your listening history. No internet access.
+- **[Reading List Export](https://github.com/stanczykwyatt/reading-list-export):** export your Safari Reading List as Markdown, bookmarks and CSV. No internet access.
+- **[Unblock Eject](https://github.com/stanczykwyatt/unblock-eject):** see what's keeping your disk from ejecting, and quit it politely. No internet access.
+- **[Next Departures](https://github.com/stanczykwyatt/next-departures):** your stop's next bus and train, live, in the menu bar. Connects only to the transit feeds you use.
+- **[Right Folder](https://github.com/stanczykwyatt/right-folder):** Open and Save dialogs, in the right folder. No internet access.
+- **[Tonecap](https://github.com/stanczykwyatt/tonecap):** design your keyboard's sound, with no recordings, and hear it as you type. No internet access.
+- **[SciLook](https://github.com/stanczykwyatt/scilook):** Quick Look for NWB, HDF5, MATLAB and NumPy files on your Mac. No internet access.
+- **[Who Stole My Focus for Windows](https://github.com/stanczykwyatt/who-stole-my-focus-windows):** the same focus-thief finder as a Windows tray app, in preview. No internet access.
+- **[brainhound](https://github.com/stanczykwyatt/brainhound):** search and read public neuroscience data from your coding agent. Goes online only to public neuroscience archives.
+- **[dropslice](https://github.com/stanczykwyatt/dropslice):** open NWB, HDF5, MATLAB, NumPy and Zarr files in your browser. Nothing is uploaded.
 
 ## Contributing
 
